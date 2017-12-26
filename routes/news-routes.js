@@ -30,7 +30,6 @@ module.exports = function(app){
     app.get("/scrape", function(req, res){
         //make request
         request("https://www.nytimes.com/", function(err, res, html){
-            var newOnes
             var $ = cheerio.load(html);
 
             $("article.story").each(function(i, element){
@@ -57,7 +56,6 @@ module.exports = function(app){
                         })
                         //console.log(newArticle)
                         newArticle.save()
-                        newOnes ++
                         console.log(newOnes)
                     }
                 })
