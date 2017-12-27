@@ -15,7 +15,7 @@ app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 app.use(express.static('public'));
 
 //routes
-//require("./routes/html-routes.js")(app);
+require("./routes/html-routes.js")(app);
 //require("./routes/comments-routes.js")(app);
 require("./routes/news-routes.js")(app);
 

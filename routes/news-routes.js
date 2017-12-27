@@ -6,7 +6,7 @@ var cheerio = require("cheerio")
 module.exports = function(app){
     //connect with db
 
-    mongoose.connect('mongodb://localhost/new')
+    mongoose.connect('mongodb://localhost/news')
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function() {
@@ -41,7 +41,7 @@ module.exports = function(app){
                 var sum = $(element).find("p.summary").text();
  //if(i < 2){
                 //adding to database
-                Article.find({'title':title},function(err,data){
+                Article.find({'url':url},function(err,data){
                     console.log(id)
 
                     if(data.length === 0){
@@ -56,7 +56,9 @@ module.exports = function(app){
                         })
                         //console.log(newArticle)
                         newArticle.save()
-                        console.log(newOnes)
+
+                    }else{
+                        console.log("already here")
                     }
                 })
 //}
@@ -66,9 +68,9 @@ module.exports = function(app){
         res.json("done")
     })
 
-//get all the data
-    app.get("/all", function(req, res){
-    	Article.find({}, function(error, data){
+//get all the data except for the saved ones
+    app.get("/all-nonsaved", function(req, res){
+    	Article.find({"selected": false}, function(error, data){
     		if(error){
     			console.log(error);
     		}else{
@@ -76,4 +78,27 @@ module.exports = function(app){
     		}
     	});
     });
+
+//get all the saved data
+    app.get("/all-saved", function(req, res){
+    	Article.find({"selected": true}, function(error, data){
+    		if(error){
+    			console.log(error);
+    		}else{
+    			res.json(data);
+    		}
+    	});
+    });
+
+//update the data saved attribute
+    app.put("/scrape", function(req, res){
+        var idtoSearch = req.body.item
+        console.log(req.body)
+        Article.findById(idtoSearch, function(err, data){
+            data.selected = true;
+            data.save();
+
+        })
+        res.json("working")
+    })
 }
