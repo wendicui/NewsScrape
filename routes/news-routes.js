@@ -13,6 +13,8 @@ module.exports = function(app){
       console.log("we're connected!")
     });
 
+    mongoose.plugin(schema => { schema.options.usePushEach = true });
+
     //create a new schema
     var articleSchema = mongoose.Schema({
         title:String,
@@ -20,7 +22,7 @@ module.exports = function(app){
         description:String,
         id:String,
         selected:Boolean,
-        Comments: [{ body: String} ]
+        Comments: []
     })
 
     //create model
@@ -100,5 +102,21 @@ module.exports = function(app){
 
         })
         res.json("working")
+    })
+
+//update Comments
+    app.put("/scrape/comment", function (req,res){
+        var idtoSearch = req.body.item
+        var content = req.body.data
+        Article.findById(idtoSearch, function(err,data){
+            console.log(data.Comments)
+            data.Comments.push(content)
+            console.log(data.Comments)
+            data.save(function(err){
+                if(err){console.log(err)}
+                else{console.log("saved")}
+            })
+        })
+        res.json("added")
     })
 }
