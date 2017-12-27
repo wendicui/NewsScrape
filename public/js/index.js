@@ -59,12 +59,5 @@ function populate(data){
 
     })
 
-//when user wants to go to the saved page
-
-$('body').on ("click", "#saved", function(){
-    window.location.href = '/saved'
-})
-
-
 
 })
