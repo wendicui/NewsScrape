@@ -40,13 +40,11 @@ module.exports = function(app){
                 var title = $(element).find("a").text();
                 var url = $(element).find("a").attr("href");
                 var id = $(element).attr("id");
-                var sum = $(element).children().next().text();
+                var sum = $(element).find("p.summary").text();
  //if(i < 2){
                 //adding to database
                 Article.find({'url':url},function(err,data){
-                    console.log(id)
-
-                    // if(data.length === 0){
+                    if(data.length === 0){
                         console.log("herer")
                     //check whether the article is already stored
                         var newArticle = new Article ({
@@ -59,9 +57,9 @@ module.exports = function(app){
                         //console.log(newArticle)
                         newArticle.save()
 
-                    // }else{
-                    //     console.log("already here")
-                    // }
+                    }else{
+                        console.log("already here")
+                    }
                 })
 //}
             })
