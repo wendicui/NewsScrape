@@ -1,5 +1,5 @@
 $(document).ready(function(){
-
+var num = 0;
 initPage();
 
 //get all the exisitng data
@@ -38,12 +38,26 @@ function populate(data){
 // when user scrape new articles
     $(".scrape-new").on("click", function(){
         event.preventDefault();
+        num ++
         $.get('/scrape', function(data){
-            console.log("scarping")
-            initPage();
+            console.log(data)
+            modalFire(data, num)
+            initPage()
         })
     })
 
+function modalFire(data,num){
+    //create modal
+    var model = $("<div class = 'modal' style = 'z-index:1003'>")
+    model.attr("id", `modal${num}`)
+    model.append(`
+            <div class="modal-content">
+              <h5>${data}</h5>
+          </div>`)
+    $('body').append(model)
+    $('.modal').modal();
+    $(`#modal${num}`).modal('open')
+}
 // when user save an article
     $('body').on("click", ".material-icons",function(){
         var id = $(this).attr("id");

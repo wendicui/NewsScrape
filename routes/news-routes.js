@@ -6,7 +6,7 @@ var cheerio = require("cheerio")
 module.exports = function(app){
     //connect with db
 
-    mongoose.connect('mongodb://localhost/necv')
+    mongoose.connect('mongodb://localhost/ccdicss')
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function() {
@@ -28,8 +28,18 @@ module.exports = function(app){
     //create model
     var Article = mongoose.model("Article", articleSchema);
 
+
+
     //scrape route
-    app.get("/scrape", function(req, res){
+    app.get("/scrape", function(req, response){
+        var num
+        Article.count({}, function(err,data){
+            if (err){console.log(err)}
+            else{
+                num = data
+            }
+        })
+
         //make request
         request("https://www.nytimes.com/", function(err, res, html){
             var $ = cheerio.load(html);
@@ -45,7 +55,7 @@ module.exports = function(app){
                 //adding to database
                 Article.find({'url':url},function(err,data){
                     if(data.length === 0){
-                        console.log("herer")
+                        //console.log("herer")
                     //check whether the article is already stored
                         var newArticle = new Article ({
                             title: title.trim(),
@@ -56,16 +66,33 @@ module.exports = function(app){
                         })
                         //console.log(newArticle)
                         newArticle.save()
+                        //console.log(res)
 
                     }else{
-                        console.log("already here")
+                        //console.log("already here")
+
                     }
                 })
 //}
             })
+
+            setTimeout(function(){
+                var num2
+                Article.count({}, function(err,data){
+                    if (err){console.log(err)}
+                    else{
+                        num2= data;
+                        var added = num2 - num;
+                        console.log(added)
+                        if(added > 0 ){
+                            response.send(`${added} articles are added`)
+                        }else{
+                            response.send("No new articles for now")
+                        }
+                    }
+                })},2000)
         })
-        //why here is OK?
-        res.json("done")
+
     })
 
 //get all the data except for the saved ones
