@@ -13,7 +13,7 @@ function initPage(){
 // add data to page
 function populate(data){
     $(".data").empty();
-    for (var i = 0; i < data.length; i++) {
+    for (var i = data.length - 1; i >=0; i--) {
         var value = data[i];
         var newDiv = $('<div class = "row">')
         newDiv.append(`<div class = "col s12">`

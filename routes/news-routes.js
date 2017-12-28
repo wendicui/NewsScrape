@@ -5,8 +5,8 @@ var cheerio = require("cheerio")
 
 module.exports = function(app){
     //connect with db
-
-    mongoose.connect('mongodb://localhost/ccdicss')
+    var MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/ccdicss'
+    mongoose.connect(MONGODB_URI)
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function() {
@@ -67,9 +67,6 @@ module.exports = function(app){
                         //console.log(newArticle)
                         newArticle.save()
                         //console.log(res)
-
-                    }else{
-                        //console.log("already here")
 
                     }
                 })
