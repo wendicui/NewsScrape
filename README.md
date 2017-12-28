@@ -56,7 +56,7 @@
 
 * Materilize with Modal
 
- ```html 
+  ```html 
       var model = $("<div class = 'modal' style = 'z-index:1003'>")
       model.attr("id", `modal${num}`)
       model.append(`
