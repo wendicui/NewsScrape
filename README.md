@@ -3,14 +3,16 @@
 #### Main Skills:
   * cheerio
     scraping data
-    ```request("https://www.nytimes.com/", function(err, res, html){
-            var $ = cheerio.load(html);
+    ```javascript
+     request("https://www.nytimes.com/", function(err, res, html){
+             var $ = cheerio.load(html);
 
-            $("article.story").each(function(i, element){
-                var title = $(element).find("a").text();
-                
-            })
-      })```
+             $("article.story").each(function(i, element){
+                 var title = $(element).find("a").text();
+
+             })
+       })
+     ```
       
   * cheerio with express: use setTimeout for response.
       ```javascript
