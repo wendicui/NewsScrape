@@ -13,14 +13,14 @@ function initPage(){
 // add data to page
 function populate(data){
     $(".data").empty();
-    for (var i = data.length - 1; i >= 0; i--) {
+    for (var i = 0; i < data.length; i++) {
         var value = data[i];
         var newDiv = $('<div class = "row">')
         newDiv.append(`<div class = "col s12">`
                         + `<div class = 'card horizontal teal'>`
                             + `<div class = "card-stacked">`
                                 + `<div class = "card-content white-text">`
-                                    + `<span class = "card-title"> ${value.title}</span>`
+                                    + `<a class = "card-title white-text" href = ${value.url}> ${value.title}</a>`
                                     + `<p> ${value.description}</p>`
                                 +  `</div>`
                             + `</div>`

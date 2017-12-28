@@ -6,7 +6,7 @@ var cheerio = require("cheerio")
 module.exports = function(app){
     //connect with db
 
-    mongoose.connect('mongodb://localhost/news')
+    mongoose.connect('mongodb://localhost/necv')
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function() {
@@ -40,13 +40,13 @@ module.exports = function(app){
                 var title = $(element).find("a").text();
                 var url = $(element).find("a").attr("href");
                 var id = $(element).attr("id");
-                var sum = $(element).find("p.summary").text();
+                var sum = $(element).children().next().text();
  //if(i < 2){
                 //adding to database
                 Article.find({'url':url},function(err,data){
                     console.log(id)
 
-                    if(data.length === 0){
+                    // if(data.length === 0){
                         console.log("herer")
                     //check whether the article is already stored
                         var newArticle = new Article ({
@@ -59,9 +59,9 @@ module.exports = function(app){
                         //console.log(newArticle)
                         newArticle.save()
 
-                    }else{
-                        console.log("already here")
-                    }
+                    // }else{
+                    //     console.log("already here")
+                    // }
                 })
 //}
             })
@@ -72,18 +72,18 @@ module.exports = function(app){
 
 //get all the data except for the saved ones
     app.get("/all-nonsaved", function(req, res){
-    	Article.find({"selected": false}, function(error, data){
-    		if(error){
-    			console.log(error);
-    		}else{
-    			res.json(data);
-    		}
-    	});
+        Article.find({"selected": false}).sort({_id:-1}).exec(function(error, data){
+            if(error){
+                console.log(error);
+            }else{
+                res.json(data);
+            }
+        });
     });
 
 //get all the saved data
     app.get("/all-saved", function(req, res){
-    	Article.find({"selected": true}, function(error, data){
+    	Article.find({"selected": true}).sort({_id:-1}).exec(function(error, data){
     		if(error){
     			console.log(error);
     		}else{
