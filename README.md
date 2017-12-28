@@ -40,9 +40,9 @@
         data.Comments = [];
         data.save();
 
-    })```
+    })
 
-  ```Article.find({"selected": true}).sort({_id:-1}).exec(function(error, data){
+  Article.find({"selected": true}).sort({_id:-1}).exec(function(error, data){
     if(error){
       console.log(error);
     }else{
