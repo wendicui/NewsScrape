@@ -132,4 +132,16 @@ module.exports = function(app){
         })
         res.json("added")
     })
+
+//delete comments
+    app.put("/scrape/comment/delete", function(req, res){
+        var index = req.body.item
+        var id = req.body.id
+        Article.findById(id, function(err, data){
+            data.Comments.splice(index,1);
+            data.save();
+
+        })
+        res.json("working")
+    })
 }

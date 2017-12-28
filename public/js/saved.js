@@ -16,7 +16,7 @@ $(document).ready(function(){
     function populate(data){
         $(".data").empty();
         //create panel for each news
-        for (var i = 0; i< data.length; i++) {
+        for (var i = data.length - 1; i >= 0; i--) {
             var value = data[i];
             var newDiv = $('<div class = "row">')
             newDiv.append(`<div class = "col s12">`
@@ -88,11 +88,11 @@ $(document).ready(function(){
     })
 //render all the previous lists
     function previousComments(data){
-        console.log(data.Comments.length)
+        //console.log(data.Comments.length)
             for (var i = 0; i < data.Comments.length; i++) {
                 //create li for each of the comments
                 var newlist = createList(data.Comments, i)
-                console.log(i)
+                //console.log(i)
                 $(`#${data._id}`).append(newlist)
             }
 
@@ -101,11 +101,36 @@ $(document).ready(function(){
     function createList(data,i){
         var newlist = $(`<li class = "collection-item" data = ${i}>${data[i]}</li>`)
         newlist.append(`
-                <a class="btn-floating btn-small red"><i class="material-icons" id = "delete">remove</i></a>
+                <a class="btn-floating btn-small red"><i class="material-icons" id = "deleteComment" data = ${i}>remove</i></a>
             `)
         return newlist
     }
 
+//delete an comment
+    $('body').on("click", "#deleteComment", function(){
+        var i = $(this).attr('data')
+        console.log(i)
+        var id = $(this).parent().parent().parent().attr('id')
+        console.log(id)
+
+        var obj ={
+            item:i,
+            id:id
+        }
+
+        //remove all the existing li in collection
+        $(".collection").empty();
+
+
+        $.ajax({
+            method:"PUT",
+            url:"scrape/comment/delete",
+            data:obj
+        }).then(function(data){
+            console.log("saved")
+            initPage();
+        })
+    })
 //unsave an article
 
     $('body').on("click", "#delete", function(){
