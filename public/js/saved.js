@@ -15,6 +15,7 @@ $(document).ready(function(){
 
     function populate(data){
         $(".data").empty();
+        //create panel for each news
         for (var i = 0; i< data.length; i++) {
             var value = data[i];
             var newDiv = $('<div class = "row">')
@@ -26,24 +27,24 @@ $(document).ready(function(){
                                         + `<p> ${value.description}</p>`
                                     +  `</div>`
                                 + `</div>`
-                                +` <a class="btn-floating red"><i class="material-icons" id = "delete">remove</i></a>
+                                +` <a class="btn-floating red"><i class="material-icons" id = "delete" data=${value._id}>remove</i></a>
                                   <a class="btn-floating yellow darken-1 modal-trigger" href = "#modal${i}"><i class="material-icons" id = "notes">note_add</i></a>`
                             +  `</div>`
                         + `</div>`
 
                             )
-            //create model
+            //create model for each news
             var model = $("<div class = 'modal' style = 'z-index:1003'>")
             model.attr("id", `modal${i}`)
             model.append(`
                     <div class="modal-content">
                       <h5>Notes for Artile </h5>
                       <h6><i> ${value.title}</i></h6>
-                      <ul class = "previousNotes"></ul>
+                      <ul class = "collection" id=${value._id}></ul>
                       <div class="input-field col s12">
                           <i class="material-icons prefix">mode_edit</i>
-                          <textarea id="icon_prefix2" class="materialize-textarea"></textarea>
-                          <label for="icon_prefix2"></label>
+                          <textarea id="icon_prefix2${value._id}" class="materialize-textarea"></textarea>
+                          <label for="icon_prefix2${value._id}"></label>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -52,21 +53,27 @@ $(document).ready(function(){
             $('body').append(model)
             $(".data").append(newDiv)
             $('.modal').modal();
+            previousComments(value);
             }
-    }
 
+    }
+// add comment to database
     $('body').on("click", ".modal-action", function(){
-        var content = $(".materialize-textarea").val();
-        $(".materialize-textarea").val("")
-        console.log(content)
         var id = $(this).attr("data")
         console.log(id)
+        var content = $(`#icon_prefix2${id}`).val();
+        $(".materialize-textarea").val("")
+        console.log(content)
+
 
         var object = {
             item:id,
             data:content
         }
         console.log(object)
+
+        //remove all the existing li in collection
+        $(".collection").empty();
 
         //add the comment to database
         $.ajax({
@@ -79,9 +86,41 @@ $(document).ready(function(){
         })
 
     })
+//render all the previous lists
+    function previousComments(data){
+        console.log(data.Comments.length)
+            for (var i = 0; i < data.Comments.length; i++) {
+                //create li for each of the comments
+                var newlist = createList(data.Comments, i)
+                console.log(i)
+                $(`#${data._id}`).append(newlist)
+            }
+
+    }
+
+    function createList(data,i){
+        var newlist = $(`<li class = "collection-item" data = ${i}>${data[i]}</li>`)
+        newlist.append(`
+                <a class="btn-floating btn-small red"><i class="material-icons" id = "delete">remove</i></a>
+            `)
+        return newlist
+    }
+
+//unsave an article
+
+    $('body').on("click", "#delete", function(){
+        var id = $(this).attr("data")
+        console.log(id)
+
+        $.ajax({
+            method:"PUT",
+            url:"/scrape/unsave",
+            data:{item: id}
+        }).then(function(data){
+            console.log("saved")
+            initPage();
+        })
 
 
-
-
-
+    })
 })

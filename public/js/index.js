@@ -39,6 +39,7 @@ function populate(data){
     $(".scrape-new").on("click", function(){
         event.preventDefault();
         $.get('/scrape', function(data){
+            console.log("scarping")
             initPage();
         })
     })

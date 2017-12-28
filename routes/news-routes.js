@@ -104,6 +104,19 @@ module.exports = function(app){
         res.json("working")
     })
 
+//unsave an article
+    app.put("/scrape/unsave", function(req, res){
+        var idtoSearch = req.body.item
+        console.log(req.body)
+        Article.findById(idtoSearch, function(err, data){
+            data.selected = false;
+            data.Comments = [];
+            data.save();
+
+        })
+        res.json("working")
+    })
+
 //update Comments
     app.put("/scrape/comment", function (req,res){
         var idtoSearch = req.body.item
